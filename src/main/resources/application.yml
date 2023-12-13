@@ -1,0 +1,18 @@
+---
+logging:
+  level:
+    root: WARN
+    org:
+      springframework:
+        web: DEBUG
+        security: DEBUG
+
+spring:
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+  output:
+    ansi:
+      enabled: always

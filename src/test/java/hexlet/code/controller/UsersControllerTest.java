@@ -31,7 +31,8 @@ public class UsersControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private Faker faker = new Faker();
+    @Autowired
+    private Faker faker;
 
     @Autowired
     private ObjectMapper om;

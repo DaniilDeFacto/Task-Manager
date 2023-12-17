@@ -19,7 +19,7 @@ public class DataInitializer implements ApplicationRunner {
     private final CustomUserDetailsService userService;
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         if (userRepository.findByEmail("hexlet@example.com").isEmpty()) {
             var email = "hexlet@example.com";
             var userData = new User();

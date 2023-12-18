@@ -3,9 +3,11 @@ package hexlet.code.service;
 import hexlet.code.dto.UserCreateDTO;
 import hexlet.code.dto.UserDTO;
 import hexlet.code.dto.UserUpdateDTO;
+import hexlet.code.exception.AccessDeniedException;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.UserMapper;
 import hexlet.code.repository.UserRepository;
+import hexlet.code.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,9 @@ public class UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private UserUtils userUtils;
 
     public List<UserDTO> getAll() {
         return userRepository.findAll().stream()
@@ -40,12 +45,22 @@ public class UserService {
     public UserDTO update(UserUpdateDTO userData, Long id) {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"));
-        userMapper.mapUpdate(userData, user);
-        userRepository.save(user);
-        return userMapper.mapShow(user);
+        var currentUser = userUtils.getCurrentUser();
+        if (currentUser == null || !currentUser.getId().equals(id)) {
+            throw new AccessDeniedException("Access denied");
+        } else {
+            userMapper.mapUpdate(userData, user);
+            userRepository.save(user);
+            return userMapper.mapShow(user);
+        }
     }
 
     public void delete(Long id) {
-        userRepository.deleteById(id);
+        var currentUser = userUtils.getCurrentUser();
+        if (currentUser == null || !currentUser.getId().equals(id)) {
+            throw new AccessDeniedException("Access denied");
+        } else {
+            userRepository.deleteById(id);
+        }
     }
 }

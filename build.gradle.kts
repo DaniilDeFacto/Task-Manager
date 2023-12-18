@@ -32,6 +32,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web:3.1.0")
 	implementation("org.springframework.boot:spring-boot-starter-validation:3.0.4")
 	implementation("org.springframework.boot:spring-boot-devtools:3.0.4")
+
 	implementation("org.springframework.boot:spring-boot-starter-security:3.0.4")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server:3.1.0")
 

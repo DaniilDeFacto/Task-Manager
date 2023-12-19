@@ -44,8 +44,8 @@ public class User implements UserDetails, BaseEntity {
     @ToString.Include
     private String lastName;
 
-    @Column(unique = true)
     @Email
+    @Column(unique = true)
     @ToString.Include
     private String email;
 

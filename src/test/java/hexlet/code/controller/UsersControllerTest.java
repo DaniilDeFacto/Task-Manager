@@ -3,9 +3,7 @@ package hexlet.code.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
-import net.datafaker.Faker;
-import org.instancio.Instancio;
-import org.instancio.Select;
+import hexlet.code.util.EntityGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +32,6 @@ public class UsersControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private Faker faker;
-
-    @Autowired
     private ObjectMapper om;
 
     @Autowired
@@ -45,21 +40,16 @@ public class UsersControllerTest {
     @Autowired
     private BCryptPasswordEncoder encoder;
 
+    @Autowired
+    private EntityGenerator entityGenerator;
+
     private User testUser;
 
     private JwtRequestPostProcessor token;
 
     @BeforeEach
-    private void setUp() {
-        testUser = Instancio.of(User.class)
-                .ignore(Select.field(User::getId))
-                .supply(Select.field(User::getFirstName), () -> faker.name().firstName())
-                .supply(Select.field(User::getLastName), () -> faker.name().lastName())
-                .supply(Select.field(User::getEmail), () -> faker.internet().emailAddress())
-                .supply(Select.field(User::getPasswordDigest), () -> faker.internet().password(3, 10))
-                .ignore(Select.field(User::getUpdatedAt))
-                .ignore(Select.field(User::getCreatedAt))
-                .create();
+    public void setUp() {
+        testUser = entityGenerator.generateUser();
         token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
     }
 
@@ -120,8 +110,8 @@ public class UsersControllerTest {
         userRepository.save(testUser);
         token = jwt().jwt(builder -> builder.subject(testUser.getEmail()));
         var data = new HashMap<>();
-        data.put("email", "otheremail@mail.ru");
-        data.put("password", "otherpas");
+        data.put("email", "othermail@mail.ru");
+        data.put("password", "otherPassword");
         var request = put("/api/users/" + testUser.getId())
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -131,11 +121,11 @@ public class UsersControllerTest {
                 .andReturn();
         var body = result.getResponse().getContentAsString();
         assertThatJson(body).and(
-                a -> a.node("email").isEqualTo("otheremail@mail.ru")
+                a -> a.node("email").isEqualTo("othermail@mail.ru")
         );
         var user = userRepository.findById(testUser.getId()).get();
-        assertThat(user.getEmail()).isEqualTo("otheremail@mail.ru");
-        assertThat(encoder.matches("otherpas", user.getPassword())).isTrue();
+        assertThat(user.getEmail()).isEqualTo("othermail@mail.ru");
+        assertThat(encoder.matches("otherPassword", user.getPassword())).isTrue();
     }
 
     @Test
@@ -143,7 +133,7 @@ public class UsersControllerTest {
         userRepository.save(testUser);
         var data = new HashMap<>();
         data.put("email", "otheremail@mail.ru");
-        data.put("password", "otherpas");
+        data.put("password", "otherPassword");
         var request = put("/api/users/" + testUser.getId())
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)

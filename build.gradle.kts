@@ -42,6 +42,7 @@ dependencies {
 
 	compileOnly ("org.projectlombok:lombok:1.18.30")
 	annotationProcessor ("org.projectlombok:lombok:1.18.30")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 	implementation("org.openapitools:jackson-databind-nullable:0.2.6")
 	implementation("org.mapstruct:mapstruct:1.5.5.Final")
 	annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")

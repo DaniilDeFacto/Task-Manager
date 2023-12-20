@@ -1,5 +1,6 @@
 package hexlet.code.util;
 
+import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
 import net.datafaker.Faker;
@@ -33,8 +34,21 @@ public class EntityGenerator {
         return Instancio.of(TaskStatus.class)
                 .ignore(Select.field(TaskStatus::getId))
                 .supply(Select.field(TaskStatus::getName), () -> faker.lorem().word())
-                .supply(Select.field(TaskStatus::getSlag), () -> faker.lorem().word())
+                .supply(Select.field(TaskStatus::getSlag), () -> faker.internet().slug())
                 .ignore(Select.field(TaskStatus::getCreatedAt))
+                .create();
+    }
+
+    @Bean
+    public Task generateTask() {
+        return Instancio.of(Task.class)
+                .ignore(Select.field(Task::getId))
+                .supply(Select.field(Task::getName), () -> faker.lorem().word())
+                .supply(Select.field(Task::getIndex), () -> faker.number().positive())
+                .supply(Select.field(Task::getDescription), () -> faker.lorem().sentence())
+                .ignore(Select.field(Task::getTaskStatus))
+                .ignore(Select.field(Task::getAssignee))
+                .ignore(Select.field(Task::getCreatedAt))
                 .create();
     }
 }

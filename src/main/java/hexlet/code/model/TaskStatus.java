@@ -5,8 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +16,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -32,15 +35,18 @@ public class TaskStatus {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @NotBlank
+    @Size(min = 1)
     @Column(unique = true)
     @ToString.Include
     private String name;
 
-    @NotBlank
+    @Size(min = 1)
     @Column(unique = true)
     @ToString.Include
     private String slag;
+
+    @OneToMany(mappedBy = "taskStatus")
+    private List<Task> tasks = new ArrayList<>();
 
     @CreatedDate
     private LocalDate createdAt;

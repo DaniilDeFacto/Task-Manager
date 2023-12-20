@@ -1,7 +1,11 @@
 package hexlet.code.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hexlet.code.model.Label;
 import hexlet.code.model.Task;
+import hexlet.code.model.TaskStatus;
+import hexlet.code.model.User;
+import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
@@ -16,6 +20,7 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.HashMap;
+import java.util.List;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -42,10 +47,19 @@ public class TaskControllerTest {
     private TaskStatusRepository taskStatusRepository;
 
     @Autowired
+    private LabelRepository labelRepository;
+
+    @Autowired
     private TaskRepository taskRepository;
 
     @Autowired
     private EntityGenerator entityGenerator;
+
+    private User testUser;
+
+    private TaskStatus testTaskStatus;
+
+    private Label testLabel;
 
     private Task testTask;
 
@@ -53,13 +67,16 @@ public class TaskControllerTest {
 
     @BeforeEach
     public void setUp() {
-        var testUser = entityGenerator.generateUser();
+        testUser = entityGenerator.generateUser();
         userRepository.save(testUser);
-        var testTaskStatus = entityGenerator.generateTaskStatus();
+        testTaskStatus = entityGenerator.generateTaskStatus();
         taskStatusRepository.save(testTaskStatus);
+        testLabel = entityGenerator.generateLabel();
+        labelRepository.save(testLabel);
         testTask = entityGenerator.generateTask();
         testTask.setAssignee(testUser);
         testTask.setTaskStatus(testTaskStatus);
+        testTask.setLabels(List.of(testLabel));
         token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
     }
 
@@ -88,9 +105,10 @@ public class TaskControllerTest {
                 a -> a.node("title").isEqualTo(testTask.getName()),
                 a -> a.node("index").isEqualTo(testTask.getIndex()),
                 a -> a.node("content").isEqualTo(testTask.getDescription()),
-                a -> a.node("status").isEqualTo(testTask.getTaskStatus().getSlag()),
-                a -> a.node("assignee_id").isEqualTo(testTask.getAssignee().getId()),
-                a -> a.node("createdAt").isEqualTo(testTask.getCreatedAt())
+                a -> a.node("status").isEqualTo(testTaskStatus.getSlag()),
+                a -> a.node("assignee_id").isEqualTo(testUser.getId()),
+                a -> a.node("createdAt").isEqualTo(testTask.getCreatedAt()),
+                a -> a.node("taskLabelIds").isEqualTo(List.of(testLabel.getId()))
         );
     }
 
@@ -100,8 +118,9 @@ public class TaskControllerTest {
         data.put("title", testTask.getName());
         data.put("index", testTask.getIndex());
         data.put("content", testTask.getDescription());
-        data.put("status", testTask.getTaskStatus().getSlag());
-        data.put("assignee_id", testTask.getAssignee().getId());
+        data.put("status", testTaskStatus.getSlag());
+        data.put("assignee_id", testUser.getId());
+        data.put("taskLabelIds", List.of(testLabel.getId()));
         var request = post("/api/tasks")
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -114,14 +133,16 @@ public class TaskControllerTest {
                 a -> a.node("title").isEqualTo(testTask.getName()),
                 a -> a.node("index").isEqualTo(testTask.getIndex()),
                 a -> a.node("content").isEqualTo(testTask.getDescription()),
-                a -> a.node("status").isEqualTo(testTask.getTaskStatus().getSlag()),
-                a -> a.node("assignee_id").isEqualTo(testTask.getAssignee().getId())
+                a -> a.node("status").isEqualTo(testTaskStatus.getSlag()),
+                a -> a.node("assignee_id").isEqualTo(testUser.getId()),
+                a -> a.node("taskLabelIds").isEqualTo(List.of(testLabel.getId()))
         );
         var task = taskRepository.findByName(testTask.getName()).get();
         assertThat(task.getIndex()).isEqualTo(testTask.getIndex());
         assertThat(task.getDescription()).isEqualTo(testTask.getDescription());
-        assertThat(task.getTaskStatus()).isEqualTo(testTask.getTaskStatus());
-        assertThat(task.getAssignee()).isEqualTo(testTask.getAssignee());
+        assertThat(task.getTaskStatus()).isEqualTo(testTaskStatus);
+        assertThat(task.getAssignee()).isEqualTo(testUser);
+//        assertThat(task.getLabels()).isEqualTo(List.of(testLabel));
     }
 
     @Test

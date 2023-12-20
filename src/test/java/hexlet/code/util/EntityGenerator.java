@@ -1,5 +1,6 @@
 package hexlet.code.util;
 
+import hexlet.code.model.Label;
 import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
@@ -48,6 +49,16 @@ public class EntityGenerator {
                 .supply(Select.field(Task::getDescription), () -> faker.lorem().sentence())
                 .ignore(Select.field(Task::getTaskStatus))
                 .ignore(Select.field(Task::getAssignee))
+                .ignore(Select.field(Task::getLabels))
+                .ignore(Select.field(Task::getCreatedAt))
+                .create();
+    }
+
+    @Bean
+    public Label generateLabel() {
+        return Instancio.of(Label.class)
+                .ignore(Select.field(Task::getId))
+                .supply(Select.field(Task::getName), () -> faker.lorem().word())
                 .ignore(Select.field(Task::getCreatedAt))
                 .create();
     }

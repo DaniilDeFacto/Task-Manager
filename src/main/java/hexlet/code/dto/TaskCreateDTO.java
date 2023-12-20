@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Setter
 @Getter
 public class TaskCreateDTO {
@@ -22,4 +24,6 @@ public class TaskCreateDTO {
     @NotNull
     @JsonProperty("assignee_id")
     private Long assigneeId;
+
+    private List<Long> taskLabelIds;
 }

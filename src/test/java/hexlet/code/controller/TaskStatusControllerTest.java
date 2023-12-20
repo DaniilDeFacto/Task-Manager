@@ -112,8 +112,8 @@ public class TaskStatusControllerTest {
         assertThatJson(body).and(
                 a -> a.node("name").isEqualTo("otherName")
         );
-        var user = taskStatusRepository.findById(testTaskStatus.getId()).get();
-        assertThat(user.getName()).isEqualTo("otherName");
+        var taskStatus = taskStatusRepository.findById(testTaskStatus.getId()).get();
+        assertThat(taskStatus.getName()).isEqualTo("otherName");
     }
 
     @Test

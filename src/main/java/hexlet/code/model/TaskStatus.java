@@ -32,13 +32,13 @@ public class TaskStatus {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @Column(unique = true)
     @NotBlank
+    @Column(unique = true)
     @ToString.Include
     private String name;
 
-    @Column(unique = true)
     @NotBlank
+    @Column(unique = true)
     @ToString.Include
     private String slag;
 

@@ -19,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 
@@ -77,6 +78,19 @@ public class TaskControllerTest {
         testTask.setAssignee(testUser);
         testTask.setTaskStatus(testTaskStatus);
         testTask.setLabels(List.of(testLabel));
+
+        var anotherUser = entityGenerator.generateUser();
+        userRepository.save(anotherUser);
+        var anotherTaskStatus = entityGenerator.generateTaskStatus();
+        taskStatusRepository.save(anotherTaskStatus);
+        var anotherLabel = entityGenerator.generateLabel();
+        labelRepository.save(anotherLabel);
+        var anotherTask = entityGenerator.generateTask();
+        anotherTask.setAssignee(anotherUser);
+        anotherTask.setTaskStatus(anotherTaskStatus);
+        anotherTask.setLabels(List.of(anotherLabel));
+        taskRepository.save(anotherTask);
+
         token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
     }
 
@@ -88,7 +102,29 @@ public class TaskControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         var body = result.getResponse().getContentAsString();
-        assertThatJson(body).isArray();
+        assertThatJson(body).isArray().hasSize(1);
+    }
+
+    @Test
+    public void testIndexWithParams() throws Exception {
+        taskRepository.save(testTask);
+        var request = get("/api/tasks?"
+                + "titleCont=" + testTask.getName().substring(2)
+                + "&assigneeId=" + testUser.getId()
+                + "&status=" + testTaskStatus.getSlug()
+                + "&labelId=" + testLabel.getId())
+                .with(token);
+        var result = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andReturn();
+        var body = result.getResponse().getContentAsString();
+        assertThatJson(body).isArray().hasSize(1).allSatisfy(element ->
+                assertThatJson(element)
+                        .and(a -> a.node("title").isEqualTo(testTask.getName()))
+                        .and(a -> a.node("assignee_id").isEqualTo(testUser.getId()))
+                        .and(a -> a.node("status").isEqualTo(testTaskStatus.getSlug()))
+                        .and(a -> a.node("taskLabelIds").isEqualTo(List.of(testLabel.getId())))
+        );
     }
 
     @Test
@@ -107,7 +143,8 @@ public class TaskControllerTest {
                 a -> a.node("content").isEqualTo(testTask.getDescription()),
                 a -> a.node("status").isEqualTo(testTaskStatus.getSlug()),
                 a -> a.node("assignee_id").isEqualTo(testUser.getId()),
-//                a -> a.node("createdAt").isEqualTo(testTask.getCreatedAt()),
+                a -> a.node("createdAt").isEqualTo(testTask.getCreatedAt()
+                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))),
                 a -> a.node("taskLabelIds").isEqualTo(List.of(testLabel.getId()))
         );
     }

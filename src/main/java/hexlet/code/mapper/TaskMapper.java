@@ -49,14 +49,14 @@ public abstract class TaskMapper {
 
     @Mapping(target = "title", source = "name")
     @Mapping(target = "content", source = "description")
-    @Mapping(target = "status", source = "taskStatus.slag")
+    @Mapping(target = "status", source = "taskStatus.slug")
     @Mapping(target = "assigneeId", source = "assignee.id")
     @Mapping(target = "taskLabelIds", source = "labels", qualifiedByName = "labelsToLabelIds")
     public abstract TaskDTO mapShow(Task model);
 
     @Named("slugToTaskStatus")
     public TaskStatus slugToTaskStatus(String slug) {
-        return taskStatusRepository.findBySlag(slug)
+        return taskStatusRepository.findBySlug(slug)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Task status with slug `" + slug + "` not found"));
     }

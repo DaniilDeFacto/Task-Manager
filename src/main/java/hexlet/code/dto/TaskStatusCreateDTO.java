@@ -14,5 +14,5 @@ public class TaskStatusCreateDTO {
 
     @Size(min = 1)
     @Column(unique = true)
-    private String slag;
+    private String slug;
 }

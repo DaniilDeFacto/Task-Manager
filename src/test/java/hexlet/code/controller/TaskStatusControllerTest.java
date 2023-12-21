@@ -71,7 +71,7 @@ public class TaskStatusControllerTest {
         var body = result.getResponse().getContentAsString();
         assertThatJson(body).and(
                 a -> a.node("name").isEqualTo(testTaskStatus.getName()),
-                a -> a.node("slag").isEqualTo(testTaskStatus.getSlag())
+                a -> a.node("slug").isEqualTo(testTaskStatus.getSlug())
         );
     }
 
@@ -79,7 +79,7 @@ public class TaskStatusControllerTest {
     public void testCreate() throws Exception {
         var data = new HashMap<>();
         data.put("name", testTaskStatus.getName());
-        data.put("slag", testTaskStatus.getSlag());
+        data.put("slug", testTaskStatus.getSlug());
         var request = post("/api/task_statuses")
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -90,9 +90,9 @@ public class TaskStatusControllerTest {
         var body = result.getResponse().getContentAsString();
         assertThatJson(body).and(
                 a -> a.node("name").isEqualTo(testTaskStatus.getName()),
-                a -> a.node("slag").isEqualTo(testTaskStatus.getSlag())
+                a -> a.node("slug").isEqualTo(testTaskStatus.getSlug())
         );
-        var taskStatus = taskStatusRepository.findBySlag(testTaskStatus.getSlag()).get();
+        var taskStatus = taskStatusRepository.findBySlug(testTaskStatus.getSlug()).get();
         assertThat(taskStatus.getName()).isEqualTo(testTaskStatus.getName());
     }
 

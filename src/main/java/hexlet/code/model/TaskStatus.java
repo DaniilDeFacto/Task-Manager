@@ -43,7 +43,7 @@ public class TaskStatus {
     @Size(min = 1)
     @Column(unique = true)
     @ToString.Include
-    private String slag;
+    private String slug;
 
     @OneToMany(mappedBy = "taskStatus")
     private List<Task> tasks = new ArrayList<>();

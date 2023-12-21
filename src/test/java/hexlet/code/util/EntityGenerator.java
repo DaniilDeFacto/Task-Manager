@@ -35,7 +35,7 @@ public class EntityGenerator {
         return Instancio.of(TaskStatus.class)
                 .ignore(Select.field(TaskStatus::getId))
                 .supply(Select.field(TaskStatus::getName), () -> faker.lorem().word())
-                .supply(Select.field(TaskStatus::getSlag), () -> faker.internet().slug())
+                .supply(Select.field(TaskStatus::getSlug), () -> faker.internet().slug())
                 .ignore(Select.field(TaskStatus::getCreatedAt))
                 .create();
     }

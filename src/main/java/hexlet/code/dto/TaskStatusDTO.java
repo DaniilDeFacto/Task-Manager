@@ -12,7 +12,7 @@ public class TaskStatusDTO {
 
     private String name;
 
-    private String slag;
+    private String slug;
 
     private LocalDate createdAt;
 }

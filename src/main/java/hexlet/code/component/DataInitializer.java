@@ -36,7 +36,7 @@ public class DataInitializer implements ApplicationRunner {
             userService.createUser(generateAdmin());
         }
         for (var status : generateDefaultStatuses()) {
-            if (taskStatusRepository.findBySlag(status.getSlag()).isEmpty()) {
+            if (taskStatusRepository.findBySlug(status.getSlug()).isEmpty()) {
                 taskStatusRepository.save(status);
             }
         }
@@ -66,7 +66,7 @@ public class DataInitializer implements ApplicationRunner {
     public static TaskStatus getTaskStatus(String name, String slug) {
         var taskStatus = new TaskStatus();
         taskStatus.setName(name);
-        taskStatus.setSlag(slug);
+        taskStatus.setSlug(slug);
         return taskStatus;
     }
 

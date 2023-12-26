@@ -22,7 +22,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -55,7 +56,7 @@ public class User implements UserDetails, BaseEntity {
     private String passwordDigest;
 
     @OneToMany(mappedBy = "assignee")
-    private List<Task> tasks = new ArrayList<>();
+    private Set<Task> tasks = new HashSet<>();
 
     @LastModifiedDate
     private LocalDate updatedAt;

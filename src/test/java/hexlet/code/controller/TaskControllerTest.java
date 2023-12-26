@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Set;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -77,7 +77,7 @@ public class TaskControllerTest {
         testTask = entityGenerator.generateTask();
         testTask.setAssignee(testUser);
         testTask.setTaskStatus(testTaskStatus);
-        testTask.setLabels(List.of(testLabel));
+        testTask.setLabels(Set.of(testLabel));
 
         var anotherUser = entityGenerator.generateUser();
         userRepository.save(anotherUser);
@@ -88,7 +88,7 @@ public class TaskControllerTest {
         var anotherTask = entityGenerator.generateTask();
         anotherTask.setAssignee(anotherUser);
         anotherTask.setTaskStatus(anotherTaskStatus);
-        anotherTask.setLabels(List.of(anotherLabel));
+        anotherTask.setLabels(Set.of(anotherLabel));
         taskRepository.save(anotherTask);
 
         token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
@@ -123,7 +123,7 @@ public class TaskControllerTest {
                         .and(a -> a.node("title").isEqualTo(testTask.getName()))
                         .and(a -> a.node("assignee_id").isEqualTo(testUser.getId()))
                         .and(a -> a.node("status").isEqualTo(testTaskStatus.getSlug()))
-                        .and(a -> a.node("taskLabelIds").isEqualTo(List.of(testLabel.getId())))
+                        .and(a -> a.node("taskLabelIds").isEqualTo(Set.of(testLabel.getId())))
         );
     }
 
@@ -145,7 +145,7 @@ public class TaskControllerTest {
                 a -> a.node("assignee_id").isEqualTo(testUser.getId()),
                 a -> a.node("createdAt").isEqualTo(testTask.getCreatedAt()
                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))),
-                a -> a.node("taskLabelIds").isEqualTo(List.of(testLabel.getId()))
+                a -> a.node("taskLabelIds").isEqualTo(Set.of(testLabel.getId()))
         );
     }
 
@@ -157,7 +157,7 @@ public class TaskControllerTest {
         data.put("content", testTask.getDescription());
         data.put("status", testTaskStatus.getSlug());
         data.put("assignee_id", testUser.getId());
-        data.put("taskLabelIds", List.of(testLabel.getId()));
+        data.put("taskLabelIds", Set.of(testLabel.getId()));
         var request = post("/api/tasks")
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -172,14 +172,14 @@ public class TaskControllerTest {
                 a -> a.node("content").isEqualTo(testTask.getDescription()),
                 a -> a.node("status").isEqualTo(testTaskStatus.getSlug()),
                 a -> a.node("assignee_id").isEqualTo(testUser.getId()),
-                a -> a.node("taskLabelIds").isEqualTo(List.of(testLabel.getId()))
+                a -> a.node("taskLabelIds").isEqualTo(Set.of(testLabel.getId()))
         );
         var task = taskRepository.findByName(testTask.getName()).get();
         assertThat(task.getIndex()).isEqualTo(testTask.getIndex());
         assertThat(task.getDescription()).isEqualTo(testTask.getDescription());
         assertThat(task.getTaskStatus()).isEqualTo(testTaskStatus);
         assertThat(task.getAssignee()).isEqualTo(testUser);
-//        assertThat(task.getLabels()).isEqualTo(List.of(testLabel));
+//        assertThat(task.getLabels()).isEqualTo(Set.of(testLabel));
     }
 
     @Test

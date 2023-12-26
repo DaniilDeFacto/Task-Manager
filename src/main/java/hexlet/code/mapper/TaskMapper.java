@@ -18,7 +18,9 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Mapper(
         uses = {JsonNullableMapper.class, ReferenceMapper.class},
@@ -62,18 +64,18 @@ public abstract class TaskMapper {
     }
 
     @Named("taskLabelIdsToLabels")
-    public List<Label> taskLabelIdsToLabels(List<Long> taskLabelIds) {
-        return taskLabelIds == null ? null : taskLabelIds.stream()
+    public Set<Label> taskLabelIdsToLabels(Set<Long> taskLabelIds) {
+        return taskLabelIds.isEmpty() ? new HashSet<>() : taskLabelIds.stream()
                 .map(id -> labelRepository.findById(id)
                             .orElseThrow(() -> new ResourceNotFoundException(
                                     "Label status with id " + id + " not found")))
-                .toList();
+                .collect(Collectors.toSet());
     }
 
     @Named("labelsToLabelIds")
-    public List<Long> labelsToLabelIds(List<Label> labels) {
-        return labels == null ? null : labels.stream()
+    public Set<Long> labelsToLabelIds(Set<Label> labels) {
+        return labels.isEmpty() ? new HashSet<>() : labels.stream()
                 .map(Label::getId)
-                .toList();
+                .collect(Collectors.toSet());
     }
 }

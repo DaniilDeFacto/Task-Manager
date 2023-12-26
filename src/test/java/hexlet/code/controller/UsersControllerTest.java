@@ -103,6 +103,7 @@ public class UsersControllerTest {
         var user = userRepository.findByEmail(testUser.getEmail()).get();
         assertThat(user.getFirstName()).isEqualTo(testUser.getFirstName());
         assertThat(user.getLastName()).isEqualTo(testUser.getLastName());
+//        assertThat(encoder.matches(testUser.getPassword(), user.getPassword())).isTrue();
     }
 
     @Test
@@ -110,8 +111,8 @@ public class UsersControllerTest {
         userRepository.save(testUser);
         token = jwt().jwt(builder -> builder.subject(testUser.getEmail()));
         var data = new HashMap<>();
-        data.put("email", "othermail@mail.ru");
-        data.put("password", "otherPassword");
+        data.put("email", "newMail@mail.ru");
+        data.put("password", "newPassword");
         var request = put("/api/users/" + testUser.getId())
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -121,19 +122,19 @@ public class UsersControllerTest {
                 .andReturn();
         var body = result.getResponse().getContentAsString();
         assertThatJson(body).and(
-                a -> a.node("email").isEqualTo("othermail@mail.ru")
+                a -> a.node("email").isEqualTo("newMail@mail.ru")
         );
         var user = userRepository.findById(testUser.getId()).get();
-        assertThat(user.getEmail()).isEqualTo("othermail@mail.ru");
-        assertThat(encoder.matches("otherPassword", user.getPassword())).isTrue();
+        assertThat(user.getEmail()).isEqualTo("newMail@mail.ru");
+        assertThat(encoder.matches("newPassword", user.getPassword())).isTrue();
     }
 
     @Test
     public void testUpdateWrongUser() throws Exception {
         userRepository.save(testUser);
         var data = new HashMap<>();
-        data.put("email", "otheremail@mail.ru");
-        data.put("password", "otherPassword");
+        data.put("email", "newMail@mail.ru");
+        data.put("password", "newPassword");
         var request = put("/api/users/" + testUser.getId())
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -141,7 +142,7 @@ public class UsersControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isForbidden());
         assertThat(userRepository.findByEmail(testUser.getEmail())).isPresent();
-        assertThat(userRepository.findByEmail("otheremail@mail.ru")).isEmpty();
+        assertThat(userRepository.findByEmail("newMail@mail.ru")).isEmpty();
     }
 
     @Test

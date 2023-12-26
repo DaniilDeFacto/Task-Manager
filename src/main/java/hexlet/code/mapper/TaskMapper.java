@@ -1,8 +1,8 @@
 package hexlet.code.mapper;
 
-import hexlet.code.dto.TaskCreateDTO;
-import hexlet.code.dto.TaskDTO;
-import hexlet.code.dto.TaskUpdateDTO;
+import hexlet.code.dto.tasks.TaskCreateDTO;
+import hexlet.code.dto.tasks.TaskDTO;
+import hexlet.code.dto.tasks.TaskUpdateDTO;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.model.Label;
 import hexlet.code.model.Task;

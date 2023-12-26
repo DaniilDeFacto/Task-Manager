@@ -100,7 +100,7 @@ public class TaskStatusControllerTest {
     public void testUpdate() throws Exception {
         taskStatusRepository.save(testTaskStatus);
         var data = new HashMap<>();
-        data.put("name", "otherName");
+        data.put("name", "New name");
         var request = put("/api/task_statuses/" + testTaskStatus.getId())
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -110,10 +110,10 @@ public class TaskStatusControllerTest {
                 .andReturn();
         var body = result.getResponse().getContentAsString();
         assertThatJson(body).and(
-                a -> a.node("name").isEqualTo("otherName")
+                a -> a.node("name").isEqualTo("New name")
         );
         var taskStatus = taskStatusRepository.findById(testTaskStatus.getId()).get();
-        assertThat(taskStatus.getName()).isEqualTo("otherName");
+        assertThat(taskStatus.getName()).isEqualTo("New name");
     }
 
     @Test

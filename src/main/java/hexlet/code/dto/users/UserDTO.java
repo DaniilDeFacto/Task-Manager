@@ -1,4 +1,4 @@
-package hexlet.code.dto;
+package hexlet.code.dto.users;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,12 +7,14 @@ import java.time.LocalDate;
 
 @Setter
 @Getter
-public class TaskStatusDTO {
+public class UserDTO {
     private Long id;
 
-    private String name;
+    private String email;
 
-    private String slug;
+    private String firstName;
+
+    private String lastName;
 
     private LocalDate createdAt;
 }

@@ -73,8 +73,11 @@ tasks.jacocoTestReport {
 }
 
 sentry {
-	includeSourceContext = true
-	org = "hexlet-5x"
-	projectName = "java-project-99"
-	authToken = System.getenv("SENTRY_AUTH_TOKEN")
+	val env = System.getenv("APP_ENV")
+	if (env != null && env.contentEquals("prod")) {
+		includeSourceContext = true
+		org = "hexlet-5x"
+		projectName = "java-project-99"
+		authToken = System.getenv("SENTRY_AUTH_TOKEN")
+	}
 }

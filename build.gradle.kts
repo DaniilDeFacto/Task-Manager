@@ -8,6 +8,7 @@ plugins {
 	checkstyle
 	id("org.springframework.boot") version "3.2.1-SNAPSHOT"
 	id("io.spring.dependency-management") version "1.1.4"
+	id ("io.sentry.jvm.gradle") version "4.1.0"
 }
 
 group = "hexlet.code"
@@ -69,4 +70,11 @@ tasks.jacocoTestReport {
 	reports {
 		xml.required = true
 	}
+}
+
+sentry {
+	includeSourceContext = true
+	org = "hexlet-5x"
+	projectName = "java-project-99"
+	authToken = System.getenv("SENTRY_AUTH_TOKEN")
 }

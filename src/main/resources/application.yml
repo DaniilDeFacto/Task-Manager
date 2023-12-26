@@ -12,7 +12,7 @@ spring:
     show-sql: true
     generate-ddl: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
   output:
     ansi:
       enabled: always
@@ -20,3 +20,7 @@ spring:
 rsa:
   private-key: classpath:certs/private.pem
   public-key: classpath:certs/public.pem
+
+sentry:
+  dsn: https://24efea61e3ad283784c8a0420b9ca651@o4506461207003136.ingest.sentry.io/4506461254189056
+  traces-sample-rate: 1.0

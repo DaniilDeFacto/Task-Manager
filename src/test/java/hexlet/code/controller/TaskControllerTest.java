@@ -10,6 +10,7 @@ import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.util.EntityGenerator;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +93,14 @@ public class TaskControllerTest {
         taskRepository.save(anotherTask);
 
         token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
+    }
+
+    @AfterEach
+    public void clean() {
+        taskRepository.deleteAll();
+        userRepository.deleteAll();
+        taskStatusRepository.deleteAll();
+        labelRepository.deleteAll();
     }
 
     @Test

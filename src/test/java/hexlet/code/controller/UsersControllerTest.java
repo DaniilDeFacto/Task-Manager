@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.util.EntityGenerator;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,11 @@ public class UsersControllerTest {
     public void setUp() {
         testUser = entityGenerator.generateUser();
         token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
+    }
+
+    @AfterEach
+    public void clean() {
+        userRepository.deleteAll();
     }
 
     @Test
@@ -131,6 +137,9 @@ public class UsersControllerTest {
 
     @Test
     public void testUpdateWrongUser() throws Exception {
+        var anotherUser = entityGenerator.generateUser();
+        userRepository.save(anotherUser);
+        token = jwt().jwt(builder -> builder.subject(anotherUser.getEmail()));
         userRepository.save(testUser);
         var data = new HashMap<>();
         data.put("email", "newMail@mail.ru");
@@ -158,6 +167,9 @@ public class UsersControllerTest {
 
     @Test
     public void testDeleteWrongUser() throws Exception {
+        var anotherUser = entityGenerator.generateUser();
+        userRepository.save(anotherUser);
+        token = jwt().jwt(builder -> builder.subject(anotherUser.getEmail()));
         userRepository.save(testUser);
         var request = delete("/api/users/" + testUser.getId())
                 .with(token);

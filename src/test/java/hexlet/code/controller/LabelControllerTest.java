@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.model.Label;
 import hexlet.code.repository.LabelRepository;
 import hexlet.code.util.EntityGenerator;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,11 @@ public class LabelControllerTest {
     public void setUp() {
         testLabel = entityGenerator.generateLabel();
         token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
+    }
+
+    @AfterEach
+    public void clean() {
+        labelRepository.deleteAll();
     }
 
     @Test

@@ -98,9 +98,9 @@ public class TaskControllerTest {
     @AfterEach
     public void clean() {
         taskRepository.deleteAll();
-        userRepository.deleteAll();
         taskStatusRepository.deleteAll();
         labelRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test

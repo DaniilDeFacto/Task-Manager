@@ -51,7 +51,9 @@ public class UsersControllerTest {
     @BeforeEach
     public void setUp() {
         testUser = entityGenerator.generateUser();
-        token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
+        var userWithToken = entityGenerator.generateUser();
+        userRepository.save(userWithToken);
+        token = jwt().jwt(builder -> builder.subject(userWithToken.getEmail()));
     }
 
     @AfterEach

@@ -3,6 +3,7 @@ package hexlet.code.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.repository.TaskStatusRepository;
+import hexlet.code.repository.UserRepository;
 import hexlet.code.util.EntityGenerator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,6 +39,9 @@ public class TaskStatusControllerTest {
     private TaskStatusRepository taskStatusRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private EntityGenerator entityGenerator;
 
     private TaskStatus testTaskStatus;
@@ -47,12 +51,16 @@ public class TaskStatusControllerTest {
     @BeforeEach
     public void setUp() {
         testTaskStatus = entityGenerator.generateTaskStatus();
-        token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
+        var testUser = entityGenerator.generateUser();
+        userRepository.save(testUser);
+
+        token = jwt().jwt(builder -> builder.subject(testUser.getEmail()));
     }
 
     @AfterEach
     public void clean() {
         taskStatusRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test

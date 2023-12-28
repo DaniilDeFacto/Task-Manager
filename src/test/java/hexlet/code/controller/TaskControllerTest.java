@@ -92,7 +92,7 @@ public class TaskControllerTest {
         anotherTask.setLabels(Set.of(anotherLabel));
         taskRepository.save(anotherTask);
 
-        token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
+        token = jwt().jwt(builder -> builder.subject(testUser.getEmail()));
     }
 
     @AfterEach

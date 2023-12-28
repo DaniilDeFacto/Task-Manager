@@ -3,6 +3,7 @@ package hexlet.code.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.model.Label;
 import hexlet.code.repository.LabelRepository;
+import hexlet.code.repository.UserRepository;
 import hexlet.code.util.EntityGenerator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,6 +39,9 @@ public class LabelControllerTest {
     private LabelRepository labelRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private EntityGenerator entityGenerator;
 
     private Label testLabel;
@@ -47,12 +51,16 @@ public class LabelControllerTest {
     @BeforeEach
     public void setUp() {
         testLabel = entityGenerator.generateLabel();
-        token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
+        var testUser = entityGenerator.generateUser();
+        userRepository.save(testUser);
+
+        token = jwt().jwt(builder -> builder.subject(testUser.getEmail()));
     }
 
     @AfterEach
     public void clean() {
         labelRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test

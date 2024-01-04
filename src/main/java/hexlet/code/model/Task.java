@@ -30,7 +30,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @EntityListeners(AuditingEntityListener.class)
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Task {
+public class Task implements BaseEntity {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @ToString.Include
@@ -55,7 +55,7 @@ public class Task {
     @ManyToOne(fetch = FetchType.EAGER)
     private User assignee;
 
-    @ManyToMany(cascade = CascadeType.MERGE)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private Set<Label> labels = new HashSet<>();
 
     @CreatedDate

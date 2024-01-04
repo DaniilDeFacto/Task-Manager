@@ -28,7 +28,7 @@ public class UsersController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    ResponseEntity<List<UserDTO>> index() {
+    ResponseEntity<List<UserDTO>> getList() {
         var result = userService.getAll();
         return ResponseEntity.ok()
                 .header("X-Total-Count", String.valueOf(result.size()))

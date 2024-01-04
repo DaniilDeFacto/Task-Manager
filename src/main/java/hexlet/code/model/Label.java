@@ -28,7 +28,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @EntityListeners(AuditingEntityListener.class)
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Label {
+public class Label implements BaseEntity {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @ToString.Include

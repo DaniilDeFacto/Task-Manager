@@ -28,7 +28,7 @@ public class LabelController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    ResponseEntity<List<LabelDTO>> index() {
+    ResponseEntity<List<LabelDTO>> getList() {
         var result = labelService.getAll();
         return ResponseEntity.ok()
                 .header("X-Total-Count", String.valueOf(result.size()))

@@ -55,9 +55,6 @@ public class User implements UserDetails, BaseEntity {
     @NotBlank
     private String passwordDigest;
 
-    @OneToMany(mappedBy = "assignee")
-    private Set<Task> tasks = new HashSet<>();
-
     @LastModifiedDate
     private LocalDate updatedAt;
 

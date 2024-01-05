@@ -45,9 +45,6 @@ public class TaskStatus implements BaseEntity {
     @ToString.Include
     private String slug;
 
-    @OneToMany(mappedBy = "taskStatus")
-    private Set<Task> tasks = new HashSet<>();
-
     @CreatedDate
     private LocalDate createdAt;
 }

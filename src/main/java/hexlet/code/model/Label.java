@@ -40,9 +40,6 @@ public class Label implements BaseEntity {
     @ToString.Include
     private String name;
 
-    @ManyToMany(mappedBy = "labels")
-    private Set<Task> tasks = new HashSet<>();
-
     @CreatedDate
     private LocalDate createdAt;
 }

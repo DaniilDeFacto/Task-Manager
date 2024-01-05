@@ -57,9 +57,9 @@ public class EntityGenerator {
     @Bean
     public Label generateLabel() {
         return Instancio.of(Label.class)
-                .ignore(Select.field(Task::getId))
-                .supply(Select.field(Task::getName), () -> faker.lorem().word())
-                .ignore(Select.field(Task::getCreatedAt))
+                .ignore(Select.field(Label::getId))
+                .supply(Select.field(Label::getName), () -> faker.text().text(3, 1000))
+                .ignore(Select.field(Label::getCreatedAt))
                 .create();
     }
 }

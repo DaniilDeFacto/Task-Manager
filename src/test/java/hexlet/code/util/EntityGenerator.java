@@ -7,15 +7,13 @@ import hexlet.code.model.User;
 import net.datafaker.Faker;
 import org.instancio.Instancio;
 import org.instancio.Select;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 @Component
 public class EntityGenerator {
 
-    @Autowired
-    private Faker faker;
+    private Faker faker = new Faker();
 
     @Bean
     public User generateUser() {

@@ -30,17 +30,28 @@ public class DataInitializer implements ApplicationRunner {
     @Autowired
     private final CustomUserDetailsService userService;
 
+    private static final List<TaskStatus> STATUSES = List.of(
+            getTaskStatus("Draft", "draft"),
+            getTaskStatus("To review", "to_review"),
+            getTaskStatus("To be fixed", "to_be_fixed"),
+            getTaskStatus("To publish", "to_publish"),
+            getTaskStatus("Published", "published"));
+
+    private static final List<Label> LABELS = List.of(
+            getLabel("feature"),
+            getLabel("bug"));
+
     @Override
     public void run(ApplicationArguments args) {
         if (userRepository.findByEmail("hexlet@example.com").isEmpty()) {
             userService.createUser(generateAdmin());
         }
-        for (var status : generateDefaultStatuses()) {
+        for (var status : STATUSES) {
             if (taskStatusRepository.findBySlug(status.getSlug()).isEmpty()) {
                 taskStatusRepository.save(status);
             }
         }
-        for (var label : generateDefaultLabels()) {
+        for (var label : LABELS) {
             if (labelRepository.findByName(label.getName()).isEmpty()) {
                 labelRepository.save(label);
             }
@@ -54,15 +65,6 @@ public class DataInitializer implements ApplicationRunner {
         return userData;
     }
 
-    public static List<TaskStatus> generateDefaultStatuses() {
-        var draftStatus = getTaskStatus("Draft", "draft");
-        var toReviewStatus = getTaskStatus("To review", "to_review");
-        var toBeFixedStatus = getTaskStatus("To be fixed", "to_be_fixed");
-        var toPublishStatus = getTaskStatus("To publish", "to_publish");
-        var publishedStatus = getTaskStatus("Published", "published");
-        return List.of(draftStatus, toReviewStatus, toBeFixedStatus, toPublishStatus, publishedStatus);
-    }
-
     public static TaskStatus getTaskStatus(String name, String slug) {
         var taskStatus = new TaskStatus();
         taskStatus.setName(name);
@@ -70,11 +72,9 @@ public class DataInitializer implements ApplicationRunner {
         return taskStatus;
     }
 
-    public static List<Label> generateDefaultLabels() {
-        var featureLabel = new Label();
-        featureLabel.setName("feature");
-        var bugLabel = new Label();
-        bugLabel.setName("bug");
-        return List.of(featureLabel, bugLabel);
+    public static Label getLabel(String name) {
+        var label = new Label();
+        label.setName(name);
+        return label;
     }
 }

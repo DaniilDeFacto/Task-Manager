@@ -3,7 +3,6 @@ package hexlet.code.service;
 import hexlet.code.dto.labels.LabelCreateDTO;
 import hexlet.code.dto.labels.LabelUpdateDTO;
 import hexlet.code.dto.labels.LabelDTO;
-import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.LabelMapper;
 import hexlet.code.repository.LabelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,29 +19,25 @@ public class LabelService {
     private LabelMapper labelMapper;
 
     public List<LabelDTO> getAll() {
-        return labelRepository.findAll().stream()
-                .map(labelMapper::mapShow)
-                .toList();
+        return labelMapper.map(labelRepository.findAll());
     }
 
     public LabelDTO findById(Long id) {
-        var label = labelRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Label with id " + id + " not found"));
-        return labelMapper.mapShow(label);
+        var label = labelRepository.findById(id).orElseThrow();
+        return labelMapper.map(label);
     }
 
     public LabelDTO create(LabelCreateDTO labelData) {
-        var label = labelMapper.mapCreate(labelData);
+        var label = labelMapper.map(labelData);
         labelRepository.save(label);
-        return labelMapper.mapShow(label);
+        return labelMapper.map(label);
     }
 
     public LabelDTO update(LabelUpdateDTO labelData, Long id) {
-        var label = labelRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Label with id " + id + " not found"));
-        labelMapper.mapUpdate(labelData, label);
+        var label = labelRepository.findById(id).orElseThrow();
+        labelMapper.map(labelData, label);
         labelRepository.save(label);
-        return labelMapper.mapShow(label);
+        return labelMapper.map(label);
     }
 
     public void delete(Long id) {

@@ -10,6 +10,8 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.List;
+
 @Mapper(
         uses = {JsonNullableMapper.class, ReferenceMapper.class},
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
@@ -17,9 +19,11 @@ import org.mapstruct.ReportingPolicy;
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public abstract class TaskStatusMapper {
-    public abstract TaskStatus mapCreate(TaskStatusCreateDTO dto);
+    public abstract TaskStatus map(TaskStatusCreateDTO dto);
 
-    public abstract void mapUpdate(TaskStatusUpdateDTO dto, @MappingTarget TaskStatus model);
+    public abstract void map(TaskStatusUpdateDTO dto, @MappingTarget TaskStatus model);
 
-    public abstract TaskStatusDTO mapShow(TaskStatus model);
+    public abstract TaskStatusDTO map(TaskStatus model);
+
+    public abstract List<TaskStatusDTO> map(List<TaskStatus> models);
 }

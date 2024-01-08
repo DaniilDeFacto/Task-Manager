@@ -4,7 +4,6 @@ import hexlet.code.dto.tasks.TaskCreateDTO;
 import hexlet.code.dto.tasks.TaskDTO;
 import hexlet.code.dto.tasks.TaskParamsDTO;
 import hexlet.code.dto.tasks.TaskUpdateDTO;
-import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.TaskMapper;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.specification.TaskSpecification;
@@ -26,29 +25,25 @@ public class TaskService {
 
     public List<TaskDTO> getAll(TaskParamsDTO params) {
         var spec = taskSpecification.build(params);
-        return taskRepository.findAll(spec).stream()
-                .map(taskMapper::mapShow)
-                .toList();
+        return taskMapper.map(taskRepository.findAll(spec));
     }
 
     public TaskDTO findById(Long id) {
-        var taskStatus = taskRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Task with id " + id + " not found"));
-        return taskMapper.mapShow(taskStatus);
+        var taskStatus = taskRepository.findById(id).orElseThrow();
+        return taskMapper.map(taskStatus);
     }
 
     public TaskDTO create(TaskCreateDTO taskData) {
-        var task = taskMapper.mapCreate(taskData);
+        var task = taskMapper.map(taskData);
         taskRepository.save(task);
-        return taskMapper.mapShow(task);
+        return taskMapper.map(task);
     }
 
     public TaskDTO update(TaskUpdateDTO taskData, Long id) {
-        var task = taskRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Task with id " + id + " not found"));
-        taskMapper.mapUpdate(taskData, task);
+        var task = taskRepository.findById(id).orElseThrow();
+        taskMapper.map(taskData, task);
         taskRepository.save(task);
-        return taskMapper.mapShow(task);
+        return taskMapper.map(task);
     }
 
     public void delete(Long id) {

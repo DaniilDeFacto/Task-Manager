@@ -3,7 +3,6 @@ package hexlet.code.service;
 import hexlet.code.dto.taskStatuses.TaskStatusCreateDTO;
 import hexlet.code.dto.taskStatuses.TaskStatusDTO;
 import hexlet.code.dto.taskStatuses.TaskStatusUpdateDTO;
-import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.TaskStatusMapper;
 import hexlet.code.repository.TaskStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,29 +19,25 @@ public class TaskStatusService {
     private TaskStatusMapper taskStatusMapper;
 
     public List<TaskStatusDTO> getAll() {
-        return taskStatusRepository.findAll().stream()
-                .map(taskStatusMapper::mapShow)
-                .toList();
+        return taskStatusMapper.map(taskStatusRepository.findAll());
     }
 
     public TaskStatusDTO findById(Long id) {
-        var taskStatus = taskStatusRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Task status with id " + id + " not found"));
-        return taskStatusMapper.mapShow(taskStatus);
+        var taskStatus = taskStatusRepository.findById(id).orElseThrow();
+        return taskStatusMapper.map(taskStatus);
     }
 
     public TaskStatusDTO create(TaskStatusCreateDTO taskStatusData) {
-        var taskStatus = taskStatusMapper.mapCreate(taskStatusData);
+        var taskStatus = taskStatusMapper.map(taskStatusData);
         taskStatusRepository.save(taskStatus);
-        return taskStatusMapper.mapShow(taskStatus);
+        return taskStatusMapper.map(taskStatus);
     }
 
     public TaskStatusDTO update(TaskStatusUpdateDTO taskStatusData, Long id) {
-        var taskStatus = taskStatusRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Task status with id " + id + " not found"));
-        taskStatusMapper.mapUpdate(taskStatusData, taskStatus);
+        var taskStatus = taskStatusRepository.findById(id).orElseThrow();
+        taskStatusMapper.map(taskStatusData, taskStatus);
         taskStatusRepository.save(taskStatus);
-        return taskStatusMapper.mapShow(taskStatus);
+        return taskStatusMapper.map(taskStatus);
     }
 
     public void delete(Long id) {

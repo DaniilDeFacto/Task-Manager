@@ -18,7 +18,7 @@ run-dist:
 run:
 	./gradlew run
 
-start-dev:
+start:
 	./gradlew bootRun --args='--spring.profiles.active=dev'
 
 start-prod:

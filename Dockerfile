@@ -6,4 +6,6 @@ COPY . .
 
 RUN gradle installDist
 
-CMD ./build/install/app/bin/app --spring.profiles.active=prod
+CMD ./build/install/app/bin/app
+
+EXPOSE 8080

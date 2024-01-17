@@ -9,3 +9,19 @@
 Task Manager is a system for task managing like [Redmine](http://www.redmine.org). You can create tasks, set assigners and change its statuses. Registration and authentication are required.
 
 ### [Deploy application](https://java-project-99-b0lw.onrender.com)
+### [Interactive documentation](https://java-project-99-b0lw.onrender.com/swagger-ui/index.html)
+
+## Local start
+
+If you want to start this project locally, enter this command:
+
+```bash
+make start
+```
+
+Then open http://localhost:8080 on your browser and enter admin details:
+
+```
+Username: hexlet@example.com
+Password: qwerty
+```
